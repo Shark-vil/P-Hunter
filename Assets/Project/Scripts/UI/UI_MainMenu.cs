@@ -1,5 +1,4 @@
-﻿using MLAPI;
-using MLAPI.Spawning;
+﻿using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,6 +32,13 @@ public class UI_MainMenu : MonoBehaviour
     // Stores game maps
     private string[] GameMaps;
 
+    [Header("Networking components")]
+
+    [SerializeField]
+    [Tooltip("Custom network manager")]
+    // Custom network manager
+    private NetworkManagerPoniebHunter GameNetworkManager;
+
     /// <summary>
     /// Called once before the start of the game.
     /// </summary>
@@ -56,8 +62,8 @@ public class UI_MainMenu : MonoBehaviour
     /// </summary>
     private void CreateHost()
     {
-        NetworkSceneHelper.IsHost = true;
-        StartCoroutine(LoadGameMaps());
+        //StartCoroutine(LoadGameMaps());
+        GameNetworkManager.StartHost();
     }
 
     /// <summary>
@@ -65,7 +71,7 @@ public class UI_MainMenu : MonoBehaviour
     /// </summary>
     private void JoinTheServer()
     {
-        NetworkingManager.Singleton.StartClient();
+        GameNetworkManager.StartClient();
     }
 
     /// <summary>

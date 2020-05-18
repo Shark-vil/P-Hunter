@@ -1,5 +1,4 @@
-﻿using MLAPI;
-using MLAPI.NetworkedVar;
+﻿using Mirror;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -15,19 +14,18 @@ public class MouseLook : MonoBehaviour
     public Transform HeadBone;
 
     private float rotationY;
-    private NetworkedObject NetObject;
 
-    private void Start()
-    {
-        NetObject = GetComponent<NetworkedObject>();
-    }
+    [SerializeField]
+    private Player PlayerComponent;
+
+    [SerializeField]
+    private NetworkIdentity playerIdentity;
 
     private void Update()
     {
-        if (!NetObject.IsOwner)
-            return;
+        if (playerIdentity.isLocalPlayer)
+            Moving();
 
-        Moving();
         BodyLook();
         HeadLook();
     }
@@ -45,7 +43,7 @@ public class MouseLook : MonoBehaviour
     private void BodyLook()
     {
         bool diff = AngleDiff(transform.eulerAngles.y, Model.eulerAngles.y);
-        if (!diff)
+        if (!diff || PlayerComponent.IsMovement)
         {
             Vector3 ModelAngle = Model.eulerAngles;
             Vector3 CameraAngle = transform.eulerAngles;

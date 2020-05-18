@@ -1,4 +1,4 @@
-﻿public interface IPlayerStation
+﻿public interface IPlayerState
 {
     void Idle(Player player);
     void Walk(Player player);
@@ -6,7 +6,7 @@
     void Jump(Player player);
 }
 
-public interface IPlayerNetworkStation
+public interface IPlayerNetworkState
 {
     void CmdIdle(Player player);
     void CmdWalk(Player player);

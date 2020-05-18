@@ -25,10 +25,7 @@ public class Player : NetworkBehaviour
         else
         {
             foreach (var PlayerMesh in PlayerMeshes)
-            {
-                //PlayerMesh.enabled = false;
-                //PlayerMesh.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-            }
+                PlayerMesh.enabled = false;
         }
 
         StartCoroutine(PlayerIsMove());

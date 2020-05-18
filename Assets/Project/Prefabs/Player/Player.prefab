@@ -4415,11 +4415,8 @@ MonoBehaviour:
   Physics: {fileID: 3329404308654881486}
   identity: {fileID: 4735054062933727729}
   AnimatorController: {fileID: 3812099976064344525}
-  WalkSpeed: 80
-  SprintSpeed: 200
-  PlayerModels:
-  - {fileID: 1249226574105687055}
-  - {fileID: 3220368901625064779}
+  WalkSpeed: 50
+  SprintSpeed: 150
   IsMovement: 0
   IsWalk: 0
   IsSprint: 0

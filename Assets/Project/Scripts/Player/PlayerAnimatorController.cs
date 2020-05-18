@@ -57,6 +57,9 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!PlayerController.isLocalPlayer)
+            return;
+
         if (IsMovement)
         {
             SetIdle(false);

@@ -1,8 +1,8 @@
 ﻿using MLAPI;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_MainMenu : MonoBehaviour
@@ -23,6 +23,13 @@ public class UI_MainMenu : MonoBehaviour
     [Tooltip("Button to exit the game")]
     // Button to exit the game
     private Button Button_Exit;
+
+    [Header("Game Maps")]
+
+    [SerializeField]
+    [Tooltip("Stores game maps")]
+    // Stores game maps
+    private string[] GameMaps;
 
     /// <summary>
     /// Called once before the start of the game.
@@ -47,7 +54,7 @@ public class UI_MainMenu : MonoBehaviour
     /// </summary>
     private void CreateHost()
     {
-        NetworkingManager.Singleton.StartHost();
+        StartCoroutine(LoadGameMaps());
     }
 
     /// <summary>
@@ -55,7 +62,7 @@ public class UI_MainMenu : MonoBehaviour
     /// </summary>
     private void JoinTheServer()
     {
-
+        NetworkingManager.Singleton.StartClient();
     }
 
     /// <summary>
@@ -64,5 +71,22 @@ public class UI_MainMenu : MonoBehaviour
     private void ExitTheGame()
     {
         Application.Quit();
+    }
+
+    private IEnumerator LoadGameMaps()
+    {
+        // The Application loads the Scene in the background as the current Scene runs.
+        // This is particularly good for creating loading screens.
+        // You could also load the Scene by using sceneBuildIndex. In this case Scene2 has
+        // a sceneBuildIndex of 1 as shown in Build Settings.
+
+        string GameScene = GameMaps[Random.Range(0, GameMaps.Length - 1)];
+        AsyncOperation AsyncLoad = SceneManager.LoadSceneAsync(GameScene);
+
+        // Wait until the asynchronous scene fully loads
+        while (!AsyncLoad.isDone)
+        {
+            yield return null;
+        }
     }
 }

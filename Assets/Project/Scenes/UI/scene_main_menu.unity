@@ -592,18 +592,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 778185915}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1867844665, guid: 0d25e6c8f12eca04da634d20bee8defd, type: 3}
+  m_Script: {fileID: 1554712238, guid: 01701b64234b4d523d8045142cbc73fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Port: 7777
-  Address: 127.0.0.1
-  MaxClients: 10
-  Channels: []
   MessageBufferSize: 5120
-  PingInterval: 500
-  TimeoutLimit: 32
-  TimeoutMinimum: 5000
-  TimeoutMaximum: 30000
+  MaxConnections: 100
+  ConnectAddress: 127.0.0.1
+  ConnectPort: 7777
+  ServerListenPort: 7777
+  ServerWebsocketListenPort: 8887
+  SupportWebsocket: 0
+  Channels: []
+  UseMLAPIRelay: 0
+  MLAPIRelayAddress: 184.72.104.138
+  MLAPIRelayPort: 8888
 --- !u!114 &778185917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -626,9 +628,12 @@ MonoBehaviour:
     - scene_main_menu
     - scene_dev_simple
     AllowRuntimeSceneChanges: 0
-    NetworkedPrefabs: []
+    NetworkedPrefabs:
+    - Prefab: {fileID: 6182254149173440890, guid: 974b8211ce074604da5920f5d2d4be9c,
+        type: 3}
+      PlayerPrefab: 1
     PlayerPrefabHash:
-      Value: 0
+      Value: 11493755905148493993
     CreatePlayerPrefab: 1
     ReceiveTickrate: 64
     MaxReceiveEventsPerTickRate: 500
@@ -644,7 +649,7 @@ MonoBehaviour:
     EnsureNetworkedVarLengthSafety: 0
     EnableSceneManagement: 1
     ForceSamePrefabs: 1
-    UsePrefabSync: 0
+    UsePrefabSync: 1
     RecycleNetworkIds: 1
     NetworkIdRecycleDelay: 120
     RpcHashSize: 0
@@ -1330,6 +1335,8 @@ MonoBehaviour:
   Button_Host: {fileID: 328389274}
   Button_Join: {fileID: 533996986}
   Button_Exit: {fileID: 408299501}
+  GameMaps:
+  - scene_dev_simple
 --- !u!4 &1829520962
 Transform:
   m_ObjectHideFlags: 0

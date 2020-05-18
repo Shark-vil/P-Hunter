@@ -1,5 +1,4 @@
 ﻿using Mirror;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,9 +24,9 @@ public class Player : NetworkBehaviour
     protected private NetworkIdentity identity;
 
     [SerializeField]
-    [Tooltip("Player model skin meshes")]
-    // Player model skin meshes
-    protected private SkinnedMeshRenderer[] PlayerMeshes;
+    [Tooltip("Player animator controller")]
+    // Player animator controller
+    protected private PlayerAnimatorController AnimatorController;
 
     [Header("Player Characteristics")]
 
@@ -64,7 +63,6 @@ public class Player : NetworkBehaviour
     private void Start()
     {
         DisableNoMainCamera();
-        DisableMainMeshes();
         StateController();
     }
 
@@ -80,16 +78,6 @@ public class Player : NetworkBehaviour
     {
         if (!identity.isLocalPlayer)
             MainCamera.enabled = false;
-    }
-
-    /// <summary>
-    /// Locally disables the player’s model if it belongs to him.
-    /// </summary>
-    private void DisableMainMeshes()
-    {
-        if (identity.isLocalPlayer)
-            foreach (var PlayerMesh in PlayerMeshes)
-                PlayerMesh.enabled = false;
     }
 
     /// <summary>
@@ -111,9 +99,27 @@ public class Player : NetworkBehaviour
             float Vertical = Input.GetAxis("Vertical");
 
             if (Input.GetButton("Sprint"))
+            {
                 CmdSprint(Horizontal, Vertical);
+
+                AnimatorController.IsSprint = true;
+                AnimatorController.IsWalk = false;
+            }
             else
+            {
                 CmdWalk(Horizontal, Vertical);
+
+                AnimatorController.IsWalk = true;
+                AnimatorController.IsSprint = false;
+            }
+
+            AnimatorController.IsMovement = true;
+        }
+        else
+        {
+            AnimatorController.IsMovement = false;
+            AnimatorController.IsSprint = false;
+            AnimatorController.IsWalk = false;
         }
     }
 
@@ -169,6 +175,9 @@ public class Player : NetworkBehaviour
         NewVelocity.y = Physics.velocity.y;
 
         Physics.velocity = NewVelocity;
+
+        if (!IsMovement)
+            IsMovement = true;
     }
 
     /// <summary>
@@ -185,9 +194,6 @@ public class Player : NetworkBehaviour
 
             if (PlayerPosition != SelectPlayerPosition)
             {
-                if (!IsMovement)
-                    IsMovement = true;
-
                 PlayerPosition = SelectPlayerPosition;
             }
             else
@@ -200,7 +206,7 @@ public class Player : NetworkBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }

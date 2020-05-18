@@ -25,7 +25,10 @@ public class MouseLook : MonoBehaviour
     {
         if (playerIdentity.isLocalPlayer)
             Moving();
+    }
 
+    private void LateUpdate()
+    {
         BodyLook();
         HeadLook();
     }

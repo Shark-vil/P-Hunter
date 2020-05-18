@@ -16,20 +16,20 @@ public class EyeBlinking : MonoBehaviour {
 	private bool isUnblinking = false;
 
 	// Use this for initialization
-	void Start () {
+	private void Start () {
 		// Blink every x seconds
 		float initialBlinkOffset = Random.Range(1, 5.0f);
 		InvokeRepeating("Blink", secondsBetweenBlinks + initialBlinkOffset, secondsBetweenBlinks);
 	}
-		
-	void ChangeBlend(float delta) {
-		currBlend+=delta;
-		int index = ponyBody.sharedMesh.GetBlendShapeIndex(eyeBlendShapeName); 
+
+	private void ChangeBlend(float delta) {
+		currBlend += delta;
+		int index = ponyBody.sharedMesh.GetBlendShapeIndex(eyeBlendShapeName);
 		ponyBody.SetBlendShapeWeight (index, currBlend);
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	private void LateUpdate () {
 		if (isBlinking)
 			ChangeBlend (blinkSpeed);
 		if (isUnblinking)
@@ -44,7 +44,7 @@ public class EyeBlinking : MonoBehaviour {
 			isUnblinking = false;
 	}
 
-	void Blink () {
+	private void Blink () {
 		isBlinking = true;
 	}
 }

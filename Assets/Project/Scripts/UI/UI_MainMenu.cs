@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MLAPI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,7 +47,7 @@ public class UI_MainMenu : MonoBehaviour
     /// </summary>
     private void CreateHost()
     {
-        
+        NetworkingManager.Singleton.StartHost();
     }
 
     /// <summary>

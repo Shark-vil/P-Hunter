@@ -1,4 +1,6 @@
 ﻿using MLAPI;
+using MLAPI.Spawning;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,6 +56,7 @@ public class UI_MainMenu : MonoBehaviour
     /// </summary>
     private void CreateHost()
     {
+        NetworkSceneHelper.IsHost = true;
         StartCoroutine(LoadGameMaps());
     }
 
@@ -80,7 +83,7 @@ public class UI_MainMenu : MonoBehaviour
         // You could also load the Scene by using sceneBuildIndex. In this case Scene2 has
         // a sceneBuildIndex of 1 as shown in Build Settings.
 
-        string GameScene = GameMaps[Random.Range(0, GameMaps.Length - 1)];
+        string GameScene = GameMaps[UnityEngine.Random.Range(0, GameMaps.Length - 1)];
         AsyncOperation AsyncLoad = SceneManager.LoadSceneAsync(GameScene);
 
         // Wait until the asynchronous scene fully loads

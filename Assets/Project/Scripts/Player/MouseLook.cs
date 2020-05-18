@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MLAPI;
+using MLAPI.NetworkedVar;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,9 +15,18 @@ public class MouseLook : MonoBehaviour
     public Transform HeadBone;
 
     private float rotationY;
+    private NetworkedObject NetObject;
+
+    private void Start()
+    {
+        NetObject = GetComponent<NetworkedObject>();
+    }
 
     private void Update()
     {
+        if (!NetObject.IsOwner)
+            return;
+
         Moving();
         BodyLook();
         HeadLook();
@@ -38,19 +49,6 @@ public class MouseLook : MonoBehaviour
         {
             Vector3 ModelAngle = Model.eulerAngles;
             Vector3 CameraAngle = transform.eulerAngles;
-
-            /*
-            float startRotation = CameraAngle.y;
-            float endRotation = startRotation + 360.0f;
-            float yRotation = Mathf.Lerp(startRotation, endRotation, 1f / Time.deltaTime) % 360.0f;
-
-            Vector3 NewVector = new Vector3(ModelAngle.x, yRotation, ModelAngle.z);
-
-            Model.eulerAngles = Vector3.Lerp(ModelAngle, NewVector, 0.3f);
-            */
-
-            //Model.eulerAngles = Vector3.Lerp(ModelAngle, NewVector, 0.3f);
-
             Vector3 NewVector = new Vector3(ModelAngle.x, CameraAngle.y, ModelAngle.z);
             Model.eulerAngles = AngleLerp(ModelAngle, NewVector, 0.1f);
         }

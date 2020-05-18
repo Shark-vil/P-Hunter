@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2555859836332434984}
   - component: {fileID: 5283217175416641983}
   - component: {fileID: 7442198616058200969}
+  - component: {fileID: 8159762604708809970}
   m_Layer: 9
   m_Name: Camera
   m_TagString: Untagged
@@ -83,7 +84,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5109480976416916792}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!114 &7442198616058200969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,6 +102,23 @@ MonoBehaviour:
   headMaxY: 80
   Model: {fileID: 6182254149173603666}
   HeadBone: {fileID: 6182254149173603650}
+--- !u!114 &8159762604708809970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5109480976416916792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 209037615, guid: 01701b64234b4d523d8045142cbc73fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkedInstanceId: 0
+  PrefabHash: 5967119265016871055
+  PrefabHashGenerator: MainCamera
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!1 &6182254149173440512
 GameObject:
   m_ObjectHideFlags: 0
@@ -6377,6 +6395,8 @@ GameObject:
   - component: {fileID: 4003228696129217386}
   - component: {fileID: 9099100977857276689}
   - component: {fileID: 2339269141029371386}
+  - component: {fileID: 2828045657016404314}
+  - component: {fileID: 5540452559858606148}
   m_Layer: 9
   m_Name: Player_Fluttershy
   m_TagString: Player
@@ -6524,6 +6544,35 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2828045657016404314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6182254149173440890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8b145fbbd28edb46a0572e716b0583b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondsBetweenBlinks: 5
+  blinkSpeed: 10
+  ponyBody: {fileID: 6182254149170265202}
+  eyeBlendShapeName: Happy_eyes2R+Happy_eyes2L
+--- !u!114 &5540452559858606148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6182254149173440890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5b31135a7a461c418172040f5d8eb43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainCamera: {fileID: 2555859836332434984}
 --- !u!1 &6182254149173440892
 GameObject:
   m_ObjectHideFlags: 0

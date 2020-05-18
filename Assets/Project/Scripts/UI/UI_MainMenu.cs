@@ -32,7 +32,7 @@ public class UI_MainMenu : MonoBehaviour
     // Stores game maps
     private string[] GameMaps;
 
-    [Header("Networking components")]
+    [Header("Networking Components")]
 
     [SerializeField]
     [Tooltip("Custom network manager")]

@@ -3,39 +3,183 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 
 public class Player : NetworkBehaviour
 {
-    public Camera MainCamera;
-    public Rigidbody Physics;
+    [Header("Player Components")]
+
+    [SerializeField]
+    [Tooltip("Player main camera")]
+    // Player main camera
+    protected private Camera MainCamera;
+
+    [SerializeField]
+    [Tooltip("Player rigidbody component")]
+    // Player rigidbody component
+    protected private Rigidbody Physics;
+
+    [SerializeField]
+    [Tooltip("Player network identity")]
+    // Player network identity
+    protected private NetworkIdentity identity;
+
+    [SerializeField]
+    [Tooltip("Player model skin meshes")]
+    // Player model skin meshes
+    protected private SkinnedMeshRenderer[] PlayerMeshes;
+
+    [Header("Player Characteristics")]
+
+    [SerializeField]
+    [Tooltip("Player walking speed")]
+    // Player walking speed
+    protected internal float WalkSpeed;
+
+    [SerializeField]
+    [Tooltip("Player sprint speed")]
+    // Player sprint speed
+    protected internal float SprintSpeed;
+
+    [Header("Player States")]
 
     [SyncVar]
-    public bool IsMovement;
-
     [SerializeField]
-    private NetworkIdentity identity;
+    [Tooltip("Player is movement state")]
+    // Player is movement state
+    protected internal bool IsMovement;
 
+    [SyncVar]
     [SerializeField]
-    private SkinnedMeshRenderer[] PlayerMeshes;
+    [Tooltip("Player is walk state")]
+    // Player is walk state
+    protected internal bool IsWalk;
+
+    [SyncVar]
+    [SerializeField]
+    [Tooltip("Player is sprint state")]
+    // Player is sprint state
+    protected internal bool IsSprint;
 
     private void Start()
     {
-        if (!identity.isLocalPlayer)
-            MainCamera.enabled = false;
-        else
-        {
-            foreach (var PlayerMesh in PlayerMeshes)
-                PlayerMesh.enabled = false;
-        }
-
-        StartCoroutine(PlayerIsMove());
+        DisableNoMainCamera();
+        DisableMainMeshes();
+        StateController();
     }
 
-    private IEnumerator PlayerIsMove()
+    private void FixedUpdate()
+    {
+        PlayerMovement();
+    }
+
+    /// <summary>
+    /// Disable a player’s camera if it doesn’t belong to him.
+    /// </summary>
+    private void DisableNoMainCamera()
+    {
+        if (!identity.isLocalPlayer)
+            MainCamera.enabled = false;
+    }
+
+    /// <summary>
+    /// Locally disables the player’s model if it belongs to him.
+    /// </summary>
+    private void DisableMainMeshes()
+    {
+        if (identity.isLocalPlayer)
+            foreach (var PlayerMesh in PlayerMeshes)
+                PlayerMesh.enabled = false;
+    }
+
+    /// <summary>
+    /// Registers a helper to track player states.
+    /// </summary>
+    private void StateController()
+    {
+        StartCoroutine(IsMovementState());
+    }
+
+    /// <summary>
+    /// Raises the player’s move event on the server if the corresponding keys are pressed.
+    /// </summary>
+    private void PlayerMovement()
+    {
+        if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
+        {
+            float Horizontal = Input.GetAxis("Horizontal");
+            float Vertical = Input.GetAxis("Vertical");
+
+            if (Input.GetButton("Sprint"))
+                CmdSprint(Horizontal, Vertical);
+            else
+                CmdWalk(Horizontal, Vertical);
+        }
+    }
+
+    /// <summary>
+    /// Performs player walk  on the server side.
+    /// </summary>
+    /// <param name="Horizontal">Horizontal direction</param>
+    /// <param name="Vertical">Vertical direction</param>
+    [Command]
+    private void CmdWalk(float Horizontal, float Vertical)
+    {
+        PlayerMovementToVelocity(Horizontal, Vertical, WalkSpeed);
+
+        if (!IsWalk)
+        {
+            IsWalk = true;
+            IsSprint = false;
+        }
+    }
+
+    /// <summary>
+    /// Performs player sprint on the server side.
+    /// </summary>
+    /// <param name="Horizontal">Horizontal direction</param>
+    /// <param name="Vertical">Vertical direction</param>
+    [Command]
+    private void CmdSprint(float Horizontal, float Vertical)
+    {
+        PlayerMovementToVelocity(Horizontal, Vertical, SprintSpeed);
+
+        if (!IsSprint)
+        {
+            IsSprint = true;
+            IsWalk = false;
+        }
+    }
+
+    /// <summary>
+    /// Moves a player’s physical component with a specific speed and direction.
+    /// </summary>
+    /// <param name="Horizontal">Horizontal direction</param>
+    /// <param name="Vertical">Vertical direction</param>
+    /// <param name="Speed">Move speed</param>
+    private void PlayerMovementToVelocity(float Horizontal, float Vertical, float Speed)
+    {
+        Vector3 MoveForward = new Vector3(MainCamera.transform.forward.x, 0, MainCamera.transform.forward.z).normalized;
+        Vector3 MoveRight = new Vector3(MainCamera.transform.right.x, 0, MainCamera.transform.right.z).normalized;
+
+        Vector3 MoveHorizontal = MoveRight * Horizontal;
+        Vector3 MoveVertical = MoveForward * Vertical;
+
+        Vector3 NewVelocity = MoveHorizontal + MoveVertical * Speed * Time.deltaTime;
+        NewVelocity.y = Physics.velocity.y;
+
+        Physics.velocity = NewVelocity;
+    }
+
+    /// <summary>
+    /// Watch state of a player’s movement.
+    /// </summary>
+    /// <returns>null</returns>
+    private IEnumerator IsMovementState()
     {
         Vector3 PlayerPosition = transform.position.normalized;
 
-        while(true)
+        while (true)
         {
             Vector3 SelectPlayerPosition = transform.position.normalized;
 
@@ -49,38 +193,14 @@ public class Player : NetworkBehaviour
             else
             {
                 if (IsMovement)
+                {
                     IsMovement = false;
+                    IsWalk = false;
+                    IsSprint = false;
+                }
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
         }
-    }
-
-    private void FixedUpdate()
-    {
-        PlayerMovement();
-    }
-
-    private void PlayerMovement()
-    {
-        if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
-        {
-            CmdPlayerMovement(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        }
-    }
-
-    [Command]
-    private void CmdPlayerMovement(float horizontal, float vertical)
-    {
-        Vector3 MoveForward = new Vector3(MainCamera.transform.forward.x, 0, MainCamera.transform.forward.z).normalized;
-        Vector3 MoveRight = new Vector3(MainCamera.transform.right.x, 0, MainCamera.transform.right.z).normalized;
-
-        Vector3 MoveHorizontal = MoveRight * horizontal;
-        Vector3 MoveVertical = MoveForward * vertical;
-
-        Vector3 NewVelocity = MoveHorizontal + MoveVertical * 120 * Time.deltaTime;
-        NewVelocity.y = Physics.velocity.y;
-
-        Physics.velocity = NewVelocity;
     }
 }

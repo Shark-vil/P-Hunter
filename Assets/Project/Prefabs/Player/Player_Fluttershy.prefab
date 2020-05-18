@@ -6561,6 +6561,9 @@ MonoBehaviour:
   - {fileID: 6182254149170265212}
   - {fileID: 6182254149170265186}
   - {fileID: 6182254149170265184}
+  WalkSpeed: 100
+  SprintSpeed: 200
+  IsMovement: 0
 --- !u!1 &6182254149173440892
 GameObject:
   m_ObjectHideFlags: 0

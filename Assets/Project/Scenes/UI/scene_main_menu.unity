@@ -647,7 +647,7 @@ MonoBehaviour:
   runInBackground: 1
   startOnHeadless: 0
   showDebugMessages: 0
-  serverTickRate: 33
+  serverTickRate: 64
   offlineScene: scene_main_menu
   onlineScene: scene_dev_simple
   transport: {fileID: 778185916}

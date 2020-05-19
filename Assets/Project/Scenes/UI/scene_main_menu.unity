@@ -646,11 +646,19 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 10
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 2488145120653401899, guid: 847e434d3587d8f4bb6b9487072c003c,
+  playerPrefab: {fileID: 3742529933189682080, guid: 468b8fe0bae008d4ebecb242385c8700,
     type: 3}
-  autoCreatePlayer: 1
+  autoCreatePlayer: 0
   playerSpawnMethod: 0
   spawnPrefabs: []
+  PlayerPrefabs:
+  - character: Applejack
+    playerObject: {fileID: 2488145120653401899, guid: 847e434d3587d8f4bb6b9487072c003c,
+      type: 3}
+  - character: PinkiePie
+    playerObject: {fileID: 2909905391609382574, guid: c3128238d9681b7449875ba5ccce80fb,
+      type: 3}
+  PlayersTypeExists: []
 --- !u!4 &778185918
 Transform:
   m_ObjectHideFlags: 0

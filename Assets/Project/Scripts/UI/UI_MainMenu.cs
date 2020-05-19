@@ -39,12 +39,21 @@ public class UI_MainMenu : MonoBehaviour
     // Custom network manager
     private NetworkManagerPoniebHunter GameNetworkManager;
 
+    public string HostIp = "127.0.0.1";
+    public string ServerIp = "127.0.0.1";
+
     /// <summary>
     /// Called once before the start of the game.
     /// </summary>
     private void Start()
     {
+#if UNITY_SERVER
+        Debug.Log("Server starting...");
+        GameNetworkManager.networkAddress = HostIp;
+        GameNetworkManager.StartServer();
+#else
         EventsUiElements();
+#endif
     }
 
     /// <summary>
@@ -63,6 +72,9 @@ public class UI_MainMenu : MonoBehaviour
     private void CreateHost()
     {
         //StartCoroutine(LoadGameMaps());
+
+        Debug.Log("Host starting...");
+        //GameNetworkManager.networkAddress = HostIp;
         GameNetworkManager.StartHost();
     }
 
@@ -71,6 +83,9 @@ public class UI_MainMenu : MonoBehaviour
     /// </summary>
     private void JoinTheServer()
     {
+        Debug.Log("Client starting...");
+
+        GameNetworkManager.networkAddress = ServerIp;
         GameNetworkManager.StartClient();
     }
 

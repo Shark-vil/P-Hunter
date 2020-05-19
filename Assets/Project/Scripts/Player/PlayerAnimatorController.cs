@@ -40,6 +40,11 @@ public class PlayerAnimatorController : MonoBehaviour
     // Player is sprint state
     protected internal bool IsSprint;
 
+    [SerializeField]
+    [Tooltip("Player is jump state")]
+    // Player is jump state
+    protected internal bool IsJump;
+
     private void Start()
     {
         DisableMainMeshes();
@@ -59,6 +64,14 @@ public class PlayerAnimatorController : MonoBehaviour
     {
         if (!PlayerController.isLocalPlayer)
             return;
+
+        if (IsJump)
+        {
+            SetJump(true);
+            return;
+        }
+        else
+            SetJump(false);
 
         if (IsMovement)
         {
@@ -103,5 +116,57 @@ public class PlayerAnimatorController : MonoBehaviour
     private void SetSprint(bool State)
     {
         PlayerAnimator.SetBool("IsSprint", State);
+    }
+
+    private void SetJump(bool State)
+    {
+        PlayerAnimator.SetBool("IsJump", State);
+    }
+
+    /**
+     * PUBLIC
+     */
+
+    internal void SetIdleState()
+    {
+        if (PlayerController.IsJump)
+            return;
+
+        IsJump = false;
+        IsMovement = false;
+        IsSprint = false;
+        IsWalk = false;
+    }
+
+    internal void SetMovementState()
+    {
+        if (PlayerController.IsJump)
+            return;
+
+        IsJump = false;
+        IsMovement = true;
+    }
+
+    internal void SetSprintState()
+    {
+        if (PlayerController.IsJump)
+            return;
+
+        IsSprint = true;
+        IsWalk = false;
+    }
+
+    internal void SetWalkState()
+    {
+        if (PlayerController.IsJump)
+            return;
+
+        IsWalk = true;
+        IsSprint = false;
+    }
+
+    internal void SetJumpState()
+    {
+        IsJump = true;
     }
 }

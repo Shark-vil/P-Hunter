@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,8 +16,13 @@ public class EyeBlinking : MonoBehaviour {
 	private bool isBlinking = false;
 	private bool isUnblinking = false;
 
+	public NetworkIdentity identity;
+
 	// Use this for initialization
 	private void Start () {
+		if (!identity.isClient)
+			enabled = false;
+
 		// Blink every x seconds
 		float initialBlinkOffset = Random.Range(1, 5.0f);
 		InvokeRepeating("Blink", secondsBetweenBlinks + initialBlinkOffset, secondsBetweenBlinks);

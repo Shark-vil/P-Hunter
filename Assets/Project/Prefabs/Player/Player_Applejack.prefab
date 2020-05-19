@@ -610,6 +610,7 @@ MonoBehaviour:
   IsMovement: 0
   IsWalk: 0
   IsSprint: 0
+  IsJump: 0
 --- !u!1 &1249226574105687057
 GameObject:
   m_ObjectHideFlags: 0
@@ -4411,14 +4412,20 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   MainCamera: {fileID: 1737090019069752708}
-  Physics: {fileID: 3329404308654881486}
+  Phys: {fileID: 3329404308654881486}
   identity: {fileID: 4735054062933727729}
   AnimatorController: {fileID: 3812099976064344525}
   WalkSpeed: 80
   SprintSpeed: 185
+  JumpPower: 5
   IsMovement: 0
   IsWalk: 0
   IsSprint: 0
+  LayerGround:
+    serializedVersion: 2
+    m_Bits: 1
+  IsGround: 0
+  IsJump: 0
 --- !u!1 &8278434319625891515
 GameObject:
   m_ObjectHideFlags: 0

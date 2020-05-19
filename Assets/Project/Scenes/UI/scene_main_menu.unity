@@ -650,11 +650,13 @@ MonoBehaviour:
     type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 1
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 2488145120653401899, guid: 847e434d3587d8f4bb6b9487072c003c, type: 3}
+  - {fileID: 2909905391609382574, guid: c3128238d9681b7449875ba5ccce80fb, type: 3}
   playerObjects:
   - {fileID: 2488145120653401899, guid: 847e434d3587d8f4bb6b9487072c003c, type: 3}
   - {fileID: 2909905391609382574, guid: c3128238d9681b7449875ba5ccce80fb, type: 3}
-  MatchStartDelay: 5
+  MatchStartDelay: 0
 --- !u!4 &778185918
 Transform:
   m_ObjectHideFlags: 0

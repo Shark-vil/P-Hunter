@@ -16,7 +16,7 @@ public class Player : NetworkBehaviour
     [SerializeField]
     [Tooltip("Player rigidbody component")]
     // Player rigidbody component
-    protected private Rigidbody Physics;
+    protected private Rigidbody Phys;
 
     [SerializeField]
     [Tooltip("Player network identity")]
@@ -40,6 +40,11 @@ public class Player : NetworkBehaviour
     // Player sprint speed
     protected internal float SprintSpeed;
 
+    [SerializeField]
+    [Tooltip("Player jump power")]
+    // Player jump power
+    protected internal float JumpPower;
+
     [Header("Player States")]
 
     [SyncVar]
@@ -60,6 +65,24 @@ public class Player : NetworkBehaviour
     // Player is sprint state
     protected internal bool IsSprint;
 
+    [SerializeField]
+    [Tooltip("Ground layers")]
+    // Ground layers
+    protected internal LayerMask LayerGround;
+    [SyncVar]
+    [SerializeField]
+    [Tooltip("Player is ground state")]
+    // Player is ground state
+    protected internal bool IsGround;
+
+    [SyncVar]
+    [SerializeField]
+    [Tooltip("Player is jump state")]
+    // Player is jump state
+    protected internal bool IsJump;
+
+    private float GroundDetectedCooldown;
+
     private void Start()
     {
         DisableNoMainCamera();
@@ -72,10 +95,18 @@ public class Player : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        if (!isLocalPlayer)
-            return;
+        if (isLocalPlayer)
+        {
+            PlayerMovement();
+        }
+    }
 
-        PlayerMovement();
+    private void Update()
+    {
+        if (isServer)
+        {
+            GroundDetected();
+        }
     }
 
     /// <summary>
@@ -100,6 +131,14 @@ public class Player : NetworkBehaviour
     /// </summary>
     private void PlayerMovement()
     {
+        if (!IsJump && Input.GetButtonDown("Jump"))
+        {
+            CmdJump();
+        }
+
+        if (IsJump)
+            AnimatorController.SetJumpState();
+
         if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
         {
             float Horizontal = Input.GetAxis("Horizontal");
@@ -108,25 +147,19 @@ public class Player : NetworkBehaviour
             if (Input.GetButton("Sprint"))
             {
                 CmdSprint(Horizontal, Vertical);
-
-                AnimatorController.IsSprint = true;
-                AnimatorController.IsWalk = false;
+                AnimatorController.SetSprintState();
             }
             else
             {
                 CmdWalk(Horizontal, Vertical);
-
-                AnimatorController.IsWalk = true;
-                AnimatorController.IsSprint = false;
+                AnimatorController.SetWalkState();
             }
 
-            AnimatorController.IsMovement = true;
+            AnimatorController.SetMovementState();
         }
         else
         {
-            AnimatorController.IsMovement = false;
-            AnimatorController.IsSprint = false;
-            AnimatorController.IsWalk = false;
+            AnimatorController.SetIdleState();
         }
     }
 
@@ -164,6 +197,15 @@ public class Player : NetworkBehaviour
         }
     }
 
+    [Command]
+    private void CmdJump()
+    {
+        GroundDetectedCooldown = Time.time + 1;
+
+        Phys.AddForce(transform.up * JumpPower, ForceMode.Impulse);
+        IsJump = true;
+    }
+
     /// <summary>
     /// Moves a player’s physical component with a specific speed and direction.
     /// </summary>
@@ -179,12 +221,43 @@ public class Player : NetworkBehaviour
         Vector3 MoveVertical = MoveForward * Vertical;
 
         Vector3 NewVelocity = MoveHorizontal + MoveVertical * Speed * Time.deltaTime;
-        NewVelocity.y = Physics.velocity.y;
+        NewVelocity.y = Phys.velocity.y;
 
-        Physics.velocity = NewVelocity;
+        Phys.velocity = NewVelocity;
 
         if (!IsMovement)
             IsMovement = true;
+    }
+
+    /// <summary>
+    /// Checks if the player is on the ground or not.
+    /// </summary>
+    private void GroundDetected()
+    {
+        if (GroundDetectedCooldown > Time.time)
+        {
+            IsGround = false;
+            IsJump = true;
+            return;
+        }
+
+        RaycastHit hit;
+
+        Vector3 StartPos = transform.position + new Vector3(0, 0.3f);
+        Vector3 Direction = -Vector3.up;
+        float Lenght = 0.5f;
+ 
+        if (Physics.Raycast(StartPos, Direction, out hit, Lenght, LayerGround))
+        {
+            IsJump = false;
+            IsGround = true;
+            Debug.DrawRay(StartPos, Direction * hit.distance, Color.green);
+        }
+        else
+        {
+            IsGround = false;
+            Debug.DrawRay(StartPos, Direction * Lenght, Color.yellow);
+        }
     }
 
     /// <summary>

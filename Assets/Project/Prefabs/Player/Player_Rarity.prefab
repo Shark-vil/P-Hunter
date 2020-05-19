@@ -183,7 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0.05
   MainCamera: {fileID: 603258559452570360}
   Phys: {fileID: 4499163964418190770}
   identity: {fileID: 5904813709490540173}

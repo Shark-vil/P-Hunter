@@ -91,6 +91,11 @@ public class Player : NetworkBehaviour
         {
             StateController();
         }
+
+        if (isClient && !isServer)
+        {
+            Phys.isKinematic = true;
+        }
     }
 
     private void FixedUpdate()

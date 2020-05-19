@@ -200,10 +200,21 @@ public class Player : NetworkBehaviour
     [Command]
     private void CmdJump()
     {
-        GroundDetectedCooldown = Time.time + 1;
+        GroundDetectedCooldown = Time.time + 1.5f;
 
-        Phys.AddForce(transform.up * JumpPower, ForceMode.Impulse);
+        StartCoroutine(JumpDelay());
+
         IsJump = true;
+    }
+
+    private IEnumerator JumpDelay()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+            Phys.AddForce(transform.up * JumpPower, ForceMode.Impulse);
+            yield break;
+        }
     }
 
     /// <summary>

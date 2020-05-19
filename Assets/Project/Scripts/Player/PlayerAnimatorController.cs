@@ -47,7 +47,7 @@ public class PlayerAnimatorController : MonoBehaviour
 
     private void Start()
     {
-        DisableMainMeshes();
+        //DisableMainMeshes();
     }
 
     /// <summary>

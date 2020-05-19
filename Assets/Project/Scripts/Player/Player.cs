@@ -63,11 +63,18 @@ public class Player : NetworkBehaviour
     private void Start()
     {
         DisableNoMainCamera();
-        StateController();
+
+        if (isServer)
+        {
+            StateController();
+        }
     }
 
     private void FixedUpdate()
     {
+        if (!isLocalPlayer)
+            return;
+
         PlayerMovement();
     }
 

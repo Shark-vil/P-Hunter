@@ -6,46 +6,95 @@ using UnityEngine;
 
 public class MouseLook : MonoBehaviour
 {
-    public float sensitivity = 5f;
-    public float headMinY = -40f;
-    public float headMaxY = 40f;
+    /**
+     * Player Components
+     */
 
-    public Transform Model;
-    public Transform HeadBone;
-
-    private float rotationY;
+    [Header("Player Components")]
 
     [SerializeField]
+    [Tooltip("Main player component")]
+    // Main player component
     private Player PlayerComponent;
 
     [SerializeField]
+    [Tooltip("Player network identity")]
+    // Player network identity
     private NetworkIdentity playerIdentity;
 
+    [SerializeField]
+    [Tooltip("Player model container transform")]
+    // Player model container transform
+    private Transform Model;
+
+    [SerializeField]
+    [Tooltip("Player head bone transform")]
+    // Player head bone transform
+    private Transform HeadBone;
+
+    /**
+     * Camera parametrs
+     */
+
+    [Header("Camera parametrs")]
+
+    [SerializeField]
+    [Tooltip("Camera rotation sensitivity")]
+    // Camera rotation sensitivity
+    private float Sensitivity = 5f;
+
+    [SerializeField]
+    [Tooltip("Minimum camera tilt")]
+    // Minimum camera tilt
+    public float HeadMinY = -80f;
+
+    [SerializeField]
+    [Tooltip("Maximum camera tilt")]
+    // Maximum camera tilt
+    public float HeadMaxY = 80f;
+
+    /**
+     * Other variables
+     */
+
+    // Buffer for storing camera rotation
+    private float rotationY;
+
+    /// <summary>
+    /// Called every time a frame is updated.
+    /// </summary>
     private void Update()
     {
         if (playerIdentity.isLocalPlayer)
             Moving();
     }
 
+    /// <summary>
+    /// Called every time an animation is updated.
+    /// </summary>
     private void LateUpdate()
     {
         BodyLook();
         HeadLook();
     }
 
+    /// <summary>
+    /// Controls the movement of the camera.
+    /// </summary>
     private void Moving()
     {
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
-        float rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivity;
-        rotationY += Input.GetAxis("Mouse Y") * sensitivity;
-        rotationY = Mathf.Clamp(rotationY, headMinY, headMaxY);
+        float rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * Sensitivity;
+        rotationY += Input.GetAxis("Mouse Y") * Sensitivity;
+        rotationY = Mathf.Clamp(rotationY, HeadMinY, HeadMaxY);
         transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
     }
 
+    /// <summary>
+    /// Controls the rotation of the model relative to the rotation of the camera.
+    /// </summary>
     private void BodyLook()
     {
-        bool diff = AngleDiff(transform.eulerAngles.y, Model.eulerAngles.y);
+        bool diff = AngleDiff(transform.eulerAngles.y, Model.eulerAngles.y, 40);
         if (!diff || PlayerComponent.IsMovement)
         {
             Vector3 ModelAngle = Model.eulerAngles;
@@ -55,6 +104,13 @@ public class MouseLook : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets a smooth rotation on the vector.
+    /// </summary>
+    /// <param name="StartAngle">Start angle position</param>
+    /// <param name="FinishAngle">End angle position</param>
+    /// <param name="t">Smoothing time</param>
+    /// <returns>New Vector3 for eulerAngles</returns>
     private Vector3 AngleLerp(Vector3 StartAngle, Vector3 FinishAngle, float t)
     {
         float xLerp = Mathf.LerpAngle(StartAngle.x, FinishAngle.x, t);
@@ -64,6 +120,9 @@ public class MouseLook : MonoBehaviour
         return Lerped;
     }
 
+    /// <summary>
+    /// Controls the rotation of the head relative to the rotation of the camera.
+    /// </summary>
     private void HeadLook()
     {
         Vector3 HeadAngle = HeadBone.eulerAngles;
@@ -73,6 +132,11 @@ public class MouseLook : MonoBehaviour
         HeadBone.eulerAngles = NewVector;
     }
 
+    /// <summary>
+    /// Returns the correct maximum and minimum head angle.
+    /// </summary>
+    /// <param name="x">X axis rotation</param>
+    /// <returns>X-axis normal rotation</returns>
     private float HeadUpMinMax(float x)
     {
         if (x > 225 || x < -40)
@@ -84,11 +148,18 @@ public class MouseLook : MonoBehaviour
             return 225;
     }
 
-    private bool AngleDiff(float AngleY1, float AngleY2)
+    /// <summary>
+    /// Calculates the difference between two Y axes.
+    /// </summary>
+    /// <param name="AngleY1">First Y axis</param>
+    /// <param name="AngleY2">Second Y axis</param>
+    /// <param name="MaxAngle">Maximum rotation angle</param>
+    /// <returns>Will return TRUE if the angle is not greater than allowed</returns>
+    private bool AngleDiff(float AngleY1, float AngleY2, float MaxAngle)
     {
         float result = AngleY1 - AngleY2;
 
-        if (Mathf.Abs(result) > 40)
+        if (Mathf.Abs(result) > MaxAngle)
             return false;
 
         return true;

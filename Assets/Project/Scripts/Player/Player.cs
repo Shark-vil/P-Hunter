@@ -6,27 +6,40 @@ using UnityEngine.SocialPlatforms;
 
 public class Player : NetworkBehaviour
 {
+    /**
+     * Player Components
+     */
+
     [Header("Player Components")]
 
     [SerializeField]
     [Tooltip("Player main camera")]
     // Player main camera
-    protected private Camera MainCamera;
+    protected internal Camera MainCamera;
 
     [SerializeField]
     [Tooltip("Player rigidbody component")]
     // Player rigidbody component
-    protected private Rigidbody Phys;
+    protected internal Rigidbody Phys;
 
     [SerializeField]
     [Tooltip("Player network identity")]
     // Player network identity
-    protected private NetworkIdentity identity;
+    protected internal NetworkIdentity identity;
 
     [SerializeField]
     [Tooltip("Player animator controller")]
     // Player animator controller
-    protected private PlayerAnimatorController AnimatorController;
+    protected internal PlayerAnimatorController AnimatorController;
+
+    [SerializeField]
+    [Tooltip("Player state component")]
+    // Player state component
+    protected internal IPlayerState State;
+
+    /**
+     * Player Characteristics
+     */
 
     [Header("Player Characteristics")]
 
@@ -44,6 +57,10 @@ public class Player : NetworkBehaviour
     [Tooltip("Player jump power")]
     // Player jump power
     protected internal float JumpPower;
+
+    /**
+     * Player States
+     */
 
     [Header("Player States")]
 
@@ -81,10 +98,19 @@ public class Player : NetworkBehaviour
     // Player is jump state
     protected internal bool IsJump;
 
-    private float GroundDetectedCooldown;
+    /**
+     * Other variables
+     */
 
+    // Adds time to delay ground detection
+    protected internal float GroundDetectedCooldown;
+
+    /// <summary>
+    /// Called once before starting the game.
+    /// </summary>
     private void Start()
     {
+        SetState(new PlayerStateDefault());
         DisableNoMainCamera();
 
         if (isServer)
@@ -98,6 +124,9 @@ public class Player : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Called every time when processing physical components.
+    /// </summary>
     private void FixedUpdate()
     {
         if (isLocalPlayer)
@@ -106,12 +135,24 @@ public class Player : NetworkBehaviour
         }
     }
 
+    /// <summary>
+    /// Called every time a frame is updated.
+    /// </summary>
     private void Update()
     {
         if (isServer)
         {
             GroundDetected();
         }
+    }
+
+    /// <summary>
+    /// Set the player state class.
+    /// </summary>
+    /// <param name="State">State class</param>
+    protected internal void SetState(IPlayerState State)
+    {
+        this.State = State;
     }
 
     /// <summary>
@@ -137,11 +178,8 @@ public class Player : NetworkBehaviour
     private void PlayerMovement()
     {
         if (!IsJump && Input.GetButtonDown("Jump"))
-        {
             CmdJump();
-        }
-
-        if (IsJump)
+        else if (IsJump)
             AnimatorController.SetJumpState();
 
         if (Input.GetButton("Horizontal") || Input.GetButton("Vertical"))
@@ -176,13 +214,7 @@ public class Player : NetworkBehaviour
     [Command]
     private void CmdWalk(float Horizontal, float Vertical)
     {
-        PlayerMovementToVelocity(Horizontal, Vertical, WalkSpeed);
-
-        if (!IsWalk)
-        {
-            IsWalk = true;
-            IsSprint = false;
-        }
+        State.Walk(this, Horizontal, Vertical);
     }
 
     /// <summary>
@@ -193,56 +225,16 @@ public class Player : NetworkBehaviour
     [Command]
     private void CmdSprint(float Horizontal, float Vertical)
     {
-        PlayerMovementToVelocity(Horizontal, Vertical, SprintSpeed);
-
-        if (!IsSprint)
-        {
-            IsSprint = true;
-            IsWalk = false;
-        }
-    }
-
-    [Command]
-    private void CmdJump()
-    {
-        GroundDetectedCooldown = Time.time + 1.5f;
-
-        StartCoroutine(JumpDelay());
-
-        IsJump = true;
-    }
-
-    private IEnumerator JumpDelay()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(0.5f);
-            Phys.AddForce(transform.up * JumpPower, ForceMode.Impulse);
-            yield break;
-        }
+        State.Sprint(this, Horizontal, Vertical);
     }
 
     /// <summary>
-    /// Moves a player’s physical component with a specific speed and direction.
+    /// Performs a player jump on the server side.
     /// </summary>
-    /// <param name="Horizontal">Horizontal direction</param>
-    /// <param name="Vertical">Vertical direction</param>
-    /// <param name="Speed">Move speed</param>
-    private void PlayerMovementToVelocity(float Horizontal, float Vertical, float Speed)
+    [Command]
+    private void CmdJump()
     {
-        Vector3 MoveForward = new Vector3(MainCamera.transform.forward.x, 0, MainCamera.transform.forward.z).normalized;
-        Vector3 MoveRight = new Vector3(MainCamera.transform.right.x, 0, MainCamera.transform.right.z).normalized;
-
-        Vector3 MoveHorizontal = MoveRight * Horizontal;
-        Vector3 MoveVertical = MoveForward * Vertical;
-
-        Vector3 NewVelocity = MoveHorizontal + MoveVertical * Speed * Time.deltaTime;
-        NewVelocity.y = Phys.velocity.y;
-
-        Phys.velocity = NewVelocity;
-
-        if (!IsMovement)
-            IsMovement = true;
+        State.Jump(this);
     }
 
     /// <summary>

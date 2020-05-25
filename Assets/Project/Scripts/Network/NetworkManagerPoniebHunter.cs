@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using Mirror.Websocket;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,9 @@ public class NetworkManagerPoniebHunter : NetworkManager
      */
 
     [Header("Game Manager")]
+
+    public bool IsWebGL;
+    public Transport NetTransport;
 
     [SerializeField]
     [Tooltip("Delay before the match")]
@@ -72,6 +76,13 @@ public class NetworkManagerPoniebHunter : NetworkManager
     /// </summary>
     public override void OnStartServer()
     {
+        if (IsWebGL)
+            NetTransport = GetComponent<WebsocketTransport>();
+        else
+            NetTransport = GetComponent<IgnoranceThreaded>();
+
+        transport = NetTransport;
+
         base.OnStartServer();
 
         System.Random rnd = new System.Random();

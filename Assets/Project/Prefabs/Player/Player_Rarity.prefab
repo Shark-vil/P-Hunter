@@ -77,7 +77,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3658045019443415127}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 49f73d4218a94564987ac8fb3ecdabf3, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.6371505
@@ -92,8 +92,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3658045019443415127}
   serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 60
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.03
+  syncInterval: 0.05
   clientAuthority: 1
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.03
+  syncInterval: 0.05
   clientAuthority: 1
   animator: {fileID: 5589149110053684361}
 --- !u!114 &7742820048605648478
@@ -189,8 +189,8 @@ MonoBehaviour:
   identity: {fileID: 5904813709490540173}
   AnimatorController: {fileID: 929529659758956381}
   WalkSpeed: 80
-  SprintSpeed: 185
-  JumpPower: 5
+  SprintSpeed: 160
+  JumpPower: 280
   IsMovement: 0
   IsWalk: 0
   IsSprint: 0
@@ -4280,10 +4280,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6818c3904b2bad943946eedb48094000, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensitivity: 5
-  headMinY: -80
-  headMaxY: 80
-  Model: {fileID: 6310864451467672736}
-  HeadBone: {fileID: 5589149110061378405}
   PlayerComponent: {fileID: 7742820048605648478}
   playerIdentity: {fileID: 5904813709490540173}
+  Model: {fileID: 6310864451467672736}
+  HeadBone: {fileID: 5589149110061378405}
+  Sensitivity: 5
+  HeadMinY: -80
+  HeadMaxY: 80

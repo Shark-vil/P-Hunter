@@ -97,6 +97,7 @@ public class Player : NetworkBehaviour
     [Tooltip("Player is jump state")]
     // Player is jump state
     protected internal bool IsJump;
+    protected internal bool IsPlayerPushing;
 
     /**
      * Other variables
@@ -296,5 +297,23 @@ public class Player : NetworkBehaviour
 
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    private void OnCollisionStay(Collision entity)
+    {
+        if (!isServer)
+            return;
+
+        if (entity.gameObject.tag == "Player")
+            IsPlayerPushing = true;
+    }
+
+    private void OnCollisionExit(Collision entity)
+    {
+        if (!isServer)
+            return;
+
+        if (entity.gameObject.tag == "Player")
+            IsPlayerPushing = false;
     }
 }

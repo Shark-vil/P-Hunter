@@ -576,6 +576,7 @@ GameObject:
   - component: {fileID: 778185918}
   - component: {fileID: 778185917}
   - component: {fileID: 778185916}
+  - component: {fileID: 778185919}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -644,12 +645,12 @@ MonoBehaviour:
   runInBackground: 1
   startOnHeadless: 0
   showDebugMessages: 0
-  serverTickRate: 64
+  serverTickRate: 32
   offlineScene: scene_main_menu
   onlineScene: scene_dev_simple
   transport: {fileID: 778185916}
   networkAddress: localhost
-  maxConnections: 10
+  maxConnections: 7
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 3742529933189682080, guid: 468b8fe0bae008d4ebecb242385c8700,
     type: 3}
@@ -669,8 +670,13 @@ MonoBehaviour:
   - {fileID: 9193530193405426627, guid: df1bd4b9b150a4048b284290a7d00c23, type: 3}
   - {fileID: 3658045019443415127, guid: 83838ca9ded58104aa67613995a5c96e, type: 3}
   - {fileID: 8875140503376160259, guid: fb3d5294494be5147aae81142b97142a, type: 3}
-  MatchStartDelay: 3
+  playerHunterObject: {fileID: 0}
+  IsWebGL: 0
+  NetTransport: {fileID: 0}
+  MatchStartDelay: 1
+  MatchMaxPlayersStart: 0
   playerObjectsExists: []
+  playerHunterExists: 0
 --- !u!4 &778185918
 Transform:
   m_ObjectHideFlags: 0
@@ -685,6 +691,47 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &778185919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 778185915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f039183eda8945448b822a77e2a9d0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnClientConnected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClientDataReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClientError:
+    m_PersistentCalls:
+      m_Calls: []
+  OnClientDisconnected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnServerConnected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnServerDataReceived:
+    m_PersistentCalls:
+      m_Calls: []
+  OnServerError:
+    m_PersistentCalls:
+      m_Calls: []
+  OnServerDisconnected:
+    m_PersistentCalls:
+      m_Calls: []
+  port: 7778
+  Secure: 0
+  CertificatePath: 
+  CertificatePassword: 
+  NoDelay: 1
 --- !u!1 &829008149
 GameObject:
   m_ObjectHideFlags: 0

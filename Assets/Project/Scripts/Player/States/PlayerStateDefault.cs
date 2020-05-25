@@ -51,7 +51,7 @@ public class PlayerStateDefault : IPlayerState
         Vector3 MoveHorizontal = MoveRight * Horizontal;
         Vector3 MoveVertical = MoveForward * Vertical;
 
-        Vector3 NewVelocity = MoveHorizontal + MoveVertical * Speed * Time.deltaTime;
+        Vector3 NewVelocity = MoveHorizontal + MoveVertical * Speed * Time.fixedDeltaTime;
         NewVelocity.y = Phys.velocity.y;
 
         Phys.velocity = NewVelocity;

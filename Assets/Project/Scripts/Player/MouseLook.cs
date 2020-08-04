@@ -60,6 +60,11 @@ public class MouseLook : MonoBehaviour
     // Buffer for storing camera rotation
     private float rotationY;
 
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
     /// <summary>
     /// Called every time a frame is updated.
     /// </summary>

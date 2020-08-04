@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
 
-public class Player : NetworkBehaviour
+public class Player : NetworkEntity
 {
     /**
      * Player Components
@@ -16,11 +16,6 @@ public class Player : NetworkBehaviour
     [Tooltip("Player main camera")]
     // Player main camera
     protected internal Camera MainCamera;
-
-    [SerializeField]
-    [Tooltip("Player rigidbody component")]
-    // Player rigidbody component
-    protected internal Rigidbody Phys;
 
     [SerializeField]
     [Tooltip("Player network identity")]

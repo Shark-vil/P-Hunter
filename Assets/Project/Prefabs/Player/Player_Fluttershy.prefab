@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 4868633867001705055}
   - component: {fileID: 2636744032920997857}
   - component: {fileID: 7204258084656213150}
+  - component: {fileID: -6177911789113226512}
   m_Layer: 8
   m_Name: Player_Fluttershy
   m_TagString: Player
@@ -128,7 +129,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.01
+  syncInterval: 0
   clientAuthority: 0
   localPositionSensitivity: 0.01
   localRotationSensitivity: 0.01
@@ -199,6 +200,22 @@ MonoBehaviour:
     m_Bits: 1
   IsGround: 0
   IsJump: 0
+--- !u!114 &-6177911789113226512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4201106185032381079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3c3669101825d345a8614d51960179e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PickupObject: {fileID: 0}
+  PickupLayers:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!1 &7649382916368352007
 GameObject:
   m_ObjectHideFlags: 0
